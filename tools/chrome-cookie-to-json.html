@@ -30,11 +30,61 @@
     a:hover {
       text-decoration: underline;
     }
+
+    textarea {
+      background-color: #1a1a1a;
+      color: #ffffff;
+      border: 1px solid #ffffff;
+    }
+
+    button {
+      background-color: #ffffff;
+      color: #1a1a1a;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+    }
+
+    pre {
+      background-color: #1a1a1a;
+      color: #ffffff;
+      border: 1px solid #ffffff;
+      padding: 10px;
+      white-space: pre-wrap;
+    }
   </style>
 </head>
 <body>
   <h1>Chrome Cookie To JSON</h1>
   <a href="../index.html">Back home</a>
+  <br><br>
+    <form>
+        <label for="cookie">Chrome Cookie:</label><br>
+        <textarea id="cookie" name="cookie" rows="10" cols="50"></textarea>
+    </form>
 
+    <button onclick="convertCookieToJson()">Convert</button>
+
+    <br><br>
+    <span>JSON:</span>
+    <pre id="json">{}</pre>
+    <span>JSON inline:</span>
+    <pre id="json-inline"></pre>
+
+    <script>
+        function convertCookieToJson() {
+            const cookie = document.getElementById('cookie').value;
+            const cookieArray = cookie.split('; ');
+            const cookieObject = {};
+
+            cookieArray.forEach(cookie => {
+                const [key, value] = cookie.split('=');
+                cookieObject[key] = value;
+            });
+
+            document.getElementById('json').innerText = JSON.stringify(cookieObject, null, 2);
+            document.getElementById('json-inline').innerText = JSON.stringify(cookieObject);
+        }
+    </script>
 </body>
 </html>
