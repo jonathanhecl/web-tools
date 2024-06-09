@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>HEX to Dec array for Golang</title>
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <h1>HEX to Dec array for Golang</h1>
+  <a href="../index.html">Back home</a>
+  <br><br>
+    <form>
+        <label for="hex">HEX (with spaces):</label><br>
+        <textarea id="hex" name="hex" rows="10" cols="50">39 37 38 39 38 37 30 34 E8 32 11 39 37 43</textarea>
+    </form>
+
+    <button onclick="convertHexToDecArray()">Convert</button>
+
+    <br><br>
+    <span>Dec Array:</span>
+    <pre id="decarray">{}</pre>
+
+    <script>
+        function convertHexToDecArray() {
+            const hex = document.getElementById('hex').value;
+            const hexArray = hex.split(' ');
+            const decArray = [];
+
+            hexArray.forEach(hex => {
+                decArray.push(parseInt(hex, 16));
+            });
+
+            document.getElementById('decarray').innerText = "{" + decArray + "}";
+        }
+    </script>
+</body>
+</html>
