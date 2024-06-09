@@ -45,5 +45,9 @@ background-color: #1a1a1a;
 color: #ffffff;
 border: 1px solid #ffffff;
 padding: 10px;
-white-space: pre-wrap;
+white-space: pre-wrap;       /* CSS 3 */
+white-space: -moz-pre-wrap;  /* Mozilla, desde 1999 */
+white-space: -pre-wrap;      /* Opera 4-6 */
+white-space: -o-pre-wrap;    /* Opera 7 */
+word-wrap: break-word; 
 }
