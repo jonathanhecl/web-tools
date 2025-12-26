@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>DEC / HEX / STRING Converter</title>
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <h1>DEC / HEX / STRING Converter</h1>
+  <a href="../index.html">Back home</a>
+  <br><br>
+    <form>
+        <label for="input">Input:</label><br>
+        <textarea id="input" name="input" rows="10" cols="80"></textarea>
+    </form>
+
+    <br>
+    <button onclick="decToHex()">DEC → HEX</button>
+    <button onclick="hexToDec()">HEX → DEC</button>
+    <button onclick="decToString()">DEC → STRING</button>
+    <button onclick="hexToString()">HEX → STRING</button>
+    <button onclick="stringToDec()">STRING → DEC</button>
+    <button onclick="stringToHex()">STRING → HEX</button>
+
+    <br><br>
+    <span>Output:</span>
+    <pre id="output"></pre>
+
+    <script>
+        function parseNumbers(text) {
+            // Remove commas and split by spaces or remaining separators
+            const cleaned = text.replace(/,/g, ' ').trim();
+            return cleaned.split(/\s+/).filter(x => x.length > 0);
+        }
+
+        function decToHex() {
+            const input = document.getElementById('input').value;
+            const numbers = parseNumbers(input);
+            const result = numbers.map(n => {
+                const dec = parseInt(n, 10);
+                return isNaN(dec) ? '??' : dec.toString(16).toUpperCase().padStart(2, '0');
+            });
+            document.getElementById('output').innerText = result.join(' ');
+        }
+
+        function hexToDec() {
+            const input = document.getElementById('input').value;
+            const numbers = parseNumbers(input);
+            const result = numbers.map(h => {
+                const dec = parseInt(h, 16);
+                return isNaN(dec) ? '??' : dec.toString(10);
+            });
+            document.getElementById('output').innerText = result.join(' ');
+        }
+
+        function decToString() {
+            const input = document.getElementById('input').value;
+            const numbers = parseNumbers(input);
+            let result = '';
+            numbers.forEach(n => {
+                const dec = parseInt(n, 10);
+                if (!isNaN(dec) && dec >= 0 && dec <= 1114111) {
+                    try {
+                        result += String.fromCodePoint(dec);
+                    } catch (e) {
+                        // Ignore invalid code points
+                    }
+                }
+            });
+            document.getElementById('output').innerText = result;
+        }
+
+        function hexToString() {
+            const input = document.getElementById('input').value;
+            const numbers = parseNumbers(input);
+            let result = '';
+            numbers.forEach(h => {
+                const dec = parseInt(h, 16);
+                if (!isNaN(dec) && dec >= 0 && dec <= 1114111) {
+                    try {
+                        result += String.fromCodePoint(dec);
+                    } catch (e) {
+                        // Ignore invalid code points
+                    }
+                }
+            });
+            document.getElementById('output').innerText = result;
+        }
+
+        function stringToDec() {
+            const input = document.getElementById('input').value;
+            const result = [];
+            for (const char of input) {
+                result.push(char.codePointAt(0));
+            }
+            document.getElementById('output').innerText = result.join(' ');
+        }
+
+        function stringToHex() {
+            const input = document.getElementById('input').value;
+            const result = [];
+            for (const char of input) {
+                const hex = char.codePointAt(0).toString(16).toUpperCase();
+                result.push(hex.padStart(2, '0'));
+            }
+            document.getElementById('output').innerText = result.join(' ');
+        }
+    </script>
+</body>
+</html>
