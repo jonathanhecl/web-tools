@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>XOR Cipher</title>
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <h1>XOR Cipher</h1>
+  <a href="../index.html" class="back-link">Back home</a>
+  <br><br>
+    <form>
+        <label for="input">DEC Array (with spaces or commas):</label><br>
+        <textarea id="input" name="input" rows="6" cols="80" placeholder="72 101 108 108 111"></textarea>
+        <br><br>
+        <label for="xorkey">XOR Key (DEC):</label><br>
+        <input type="number" id="xorkey" value="13" style="background-color: #1a1a1a; color: #fff; border: 1px solid #fff; padding: 8px; width: 100px;">
+    </form>
+
+    <br>
+    <button onclick="applyXor()">Apply XOR</button>
+
+    <br><br>
+    <span>Result (DEC):</span>
+    <pre id="outputDec"></pre>
+    <span>Result (HEX):</span>
+    <pre id="outputHex"></pre>
+    <span>Result (String):</span>
+    <pre id="outputStr"></pre>
+
+    <script>
+        function parseNumbers(text) {
+            const cleaned = text.replace(/,/g, ' ').trim();
+            return cleaned.split(/\s+/)
+                .filter(x => x.length > 0)
+                .map(n => parseInt(n, 10))
+                .filter(n => !isNaN(n));
+        }
+
+        function applyXor() {
+            const input = document.getElementById('input').value;
+            const xorKey = parseInt(document.getElementById('xorkey').value, 10);
+            
+            if (isNaN(xorKey)) {
+                document.getElementById('outputDec').innerText = 'Error: Invalid XOR key';
+                return;
+            }
+            
+            const numbers = parseNumbers(input);
+            const result = numbers.map(n => n ^ xorKey);
+            
+            // DEC output
+            document.getElementById('outputDec').innerText = result.join(' ');
+            
+            // HEX output
+            const hexResult = result.map(n => n.toString(16).toUpperCase().padStart(2, '0'));
+            document.getElementById('outputHex').innerText = hexResult.join(' ');
+            
+            // String output
+            let strResult = '';
+            result.forEach(n => {
+                if (n >= 0 && n <= 1114111) {
+                    try {
+                        strResult += String.fromCodePoint(n);
+                    } catch (e) {}
+                }
+            });
+            document.getElementById('outputStr').innerText = strResult;
+        }
+
+            </script>
+<script>if (window.self !== window.top) document.body.classList.add('in-iframe');</script>
+</body>
+</html>
