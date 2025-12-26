@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Math Calculator</title>
+  <link rel="stylesheet" href="../styles.css">
+  <style>
+    .section { margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #444; }
+    .section h2 { margin-top: 0; font-size: 1.2rem; }
+    input[type="number"], input[type="text"] {
+      background-color: #1a1a1a;
+      color: #ffffff;
+      border: 1px solid #ffffff;
+      padding: 8px;
+      width: 100px;
+      margin: 5px;
+    }
+    .result { color: #4CAF50; font-weight: bold; font-size: 1.2em; }
+    .formula { color: #888; font-size: 0.9em; margin-top: 5px; }
+  </style>
+</head>
+<body>
+  <h1>Math Calculator</h1>
+  <a href="../index.html" class="back-link">Back home</a>
+  <br><br>
+
+  <div class="section">
+    <h2>Regla de 3 simple</h2>
+    <table style="border-collapse: collapse;">
+      <tr>
+        <td style="padding: 5px;"><input type="number" id="r3a" placeholder="A" style="width:120px"></td>
+        <td style="padding: 5px;">→</td>
+        <td style="padding: 5px;"><input type="number" id="r3c" placeholder="100" style="width:120px"> (100%)</td>
+      </tr>
+      <tr>
+        <td style="padding: 5px;"><input type="number" id="r3b" placeholder="B" style="width:120px"></td>
+        <td style="padding: 5px;">→</td>
+        <td style="padding: 5px;"><span class="result" id="r3x">X</span></td>
+      </tr>
+    </table>
+    <br>
+    <button onclick="ruleOf3()">Calculate X</button>
+    <div class="formula">Formula: X = (B × C) / A</div>
+  </div>
+
+  <div class="section">
+    <h2>Percentage Calculator</h2>
+    
+    <p><strong>What is X% of Y?</strong></p>
+    <input type="number" id="pct1x" placeholder="X"> % of 
+    <input type="number" id="pct1y" placeholder="Y"> = 
+    <span class="result" id="pct1r">?</span>
+    <button onclick="percentOf()">Calculate</button>
+    
+    <br><br>
+    <p><strong>X is what % of Y?</strong></p>
+    <input type="number" id="pct2x" placeholder="X"> is 
+    <span class="result" id="pct2r">?</span> % of 
+    <input type="number" id="pct2y" placeholder="Y">
+    <button onclick="whatPercent()">Calculate</button>
+    
+    <br><br>
+    <p><strong>Percentage change from X to Y</strong></p>
+    From <input type="number" id="pct3x" placeholder="X"> to 
+    <input type="number" id="pct3y" placeholder="Y"> = 
+    <span class="result" id="pct3r">?</span> %
+    <button onclick="percentChange()">Calculate</button>
+  </div>
+
+  <div class="section">
+    <h2>Average (Promedio)</h2>
+    <p>Enter numbers separated by comma or space:</p>
+    <input type="text" id="avgInput" placeholder="1, 2, 3, 4, 5" style="width: 300px;">
+    <button onclick="calcAverage()">Calculate</button>
+    <br><br>
+    <span>Average: <span class="result" id="avgResult">?</span></span>
+    <span style="margin-left: 20px;">Sum: <span class="result" id="sumResult">?</span></span>
+    <span style="margin-left: 20px;">Count: <span class="result" id="countResult">?</span></span>
+    <span style="margin-left: 20px;">Min: <span class="result" id="minResult">?</span></span>
+    <span style="margin-left: 20px;">Max: <span class="result" id="maxResult">?</span></span>
+  </div>
+
+  <div class="section">
+    <h2>Discount / Markup</h2>
+    <p><strong>Apply discount:</strong></p>
+    Price: <input type="number" id="discPrice" placeholder="100">
+    Discount: <input type="number" id="discPct" placeholder="20"> %
+    <button onclick="calcDiscount()">Calculate</button>
+    <span class="result" id="discResult"></span>
+    
+    <br><br>
+    <p><strong>Apply markup:</strong></p>
+    Cost: <input type="number" id="markupCost" placeholder="100">
+    Markup: <input type="number" id="markupPct" placeholder="30"> %
+    <button onclick="calcMarkup()">Calculate</button>
+    <span class="result" id="markupResult"></span>
+  </div>
+
+  <script>
+    function ruleOf3() {
+      const a = parseFloat(document.getElementById('r3a').value);
+      const b = parseFloat(document.getElementById('r3b').value);
+      const c = parseFloat(document.getElementById('r3c').value);
+      if (a === 0) {
+        document.getElementById('r3x').innerText = 'Error: A cannot be 0';
+        return;
+      }
+      const x = (b * c) / a;
+      document.getElementById('r3x').innerText = x.toLocaleString('es-AR', { maximumFractionDigits: 4 });
+    }
+
+    function percentOf() {
+      const x = parseFloat(document.getElementById('pct1x').value);
+      const y = parseFloat(document.getElementById('pct1y').value);
+      const result = (x / 100) * y;
+      document.getElementById('pct1r').innerText = result.toLocaleString('es-AR', { maximumFractionDigits: 4 });
+    }
+
+    function whatPercent() {
+      const x = parseFloat(document.getElementById('pct2x').value);
+      const y = parseFloat(document.getElementById('pct2y').value);
+      if (y === 0) {
+        document.getElementById('pct2r').innerText = 'Error';
+        return;
+      }
+      const result = (x / y) * 100;
+      document.getElementById('pct2r').innerText = result.toLocaleString('es-AR', { maximumFractionDigits: 2 });
+    }
+
+    function percentChange() {
+      const x = parseFloat(document.getElementById('pct3x').value);
+      const y = parseFloat(document.getElementById('pct3y').value);
+      if (x === 0) {
+        document.getElementById('pct3r').innerText = 'Error';
+        return;
+      }
+      const result = ((y - x) / x) * 100;
+      const sign = result >= 0 ? '+' : '';
+      document.getElementById('pct3r').innerText = sign + result.toLocaleString('es-AR', { maximumFractionDigits: 2 });
+    }
+
+    function calcAverage() {
+      const input = document.getElementById('avgInput').value;
+      const numbers = input.replace(/,/g, ' ').trim().split(/\s+/)
+        .map(n => parseFloat(n))
+        .filter(n => !isNaN(n));
+      
+      if (numbers.length === 0) {
+        document.getElementById('avgResult').innerText = '?';
+        return;
+      }
+      
+      const sum = numbers.reduce((a, b) => a + b, 0);
+      const avg = sum / numbers.length;
+      const min = Math.min(...numbers);
+      const max = Math.max(...numbers);
+      
+      document.getElementById('avgResult').innerText = avg.toLocaleString('es-AR', { maximumFractionDigits: 4 });
+      document.getElementById('sumResult').innerText = sum.toLocaleString('es-AR', { maximumFractionDigits: 4 });
+      document.getElementById('countResult').innerText = numbers.length;
+      document.getElementById('minResult').innerText = min.toLocaleString('es-AR', { maximumFractionDigits: 4 });
+      document.getElementById('maxResult').innerText = max.toLocaleString('es-AR', { maximumFractionDigits: 4 });
+    }
+
+    function calcDiscount() {
+      const price = parseFloat(document.getElementById('discPrice').value);
+      const pct = parseFloat(document.getElementById('discPct').value);
+      const discount = price * (pct / 100);
+      const final = price - discount;
+      document.getElementById('discResult').innerText = 
+        `= ${final.toLocaleString('es-AR', { maximumFractionDigits: 2 })} (ahorras ${discount.toLocaleString('es-AR', { maximumFractionDigits: 2 })})`;
+    }
+
+    function calcMarkup() {
+      const cost = parseFloat(document.getElementById('markupCost').value);
+      const pct = parseFloat(document.getElementById('markupPct').value);
+      const markup = cost * (pct / 100);
+      const final = cost + markup;
+      document.getElementById('markupResult').innerText = 
+        `= ${final.toLocaleString('es-AR', { maximumFractionDigits: 2 })} (+${markup.toLocaleString('es-AR', { maximumFractionDigits: 2 })})`;
+    }
+  </script>
+<script>if (window.self !== window.top) document.body.classList.add('in-iframe');</script>
+</body>
+</html>
