@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Markdown ↔ BBCode Converter</title>
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <h1>Markdown ↔ BBCode Converter</h1>
+  <a href="../index.html">Back home</a>
+  <br><br>
+    <form>
+        <label for="input">Input:</label><br>
+        <textarea id="input" name="input" rows="10" cols="80"></textarea>
+    </form>
+
+    <button onclick="markdownToBBCode()">Markdown → BBCode</button>
+    <button onclick="bbcodeToMarkdown()">BBCode → Markdown</button>
+
+    <br><br>
+    <span>Output:</span>
+    <pre id="output"></pre>
+
+    <script>
+        function markdownToBBCode() {
+            let text = document.getElementById('input').value;
+            
+            // Headers
+            text = text.replace(/^###### (.+)$/gm, '[size=1]$1[/size]');
+            text = text.replace(/^##### (.+)$/gm, '[size=2]$1[/size]');
+            text = text.replace(/^#### (.+)$/gm, '[size=3]$1[/size]');
+            text = text.replace(/^### (.+)$/gm, '[size=4]$1[/size]');
+            text = text.replace(/^## (.+)$/gm, '[size=5]$1[/size]');
+            text = text.replace(/^# (.+)$/gm, '[size=6]$1[/size]');
+            
+            // Bold and Italic combined
+            text = text.replace(/\*\*\*(.+?)\*\*\*/g, '[b][i]$1[/i][/b]');
+            text = text.replace(/___(.+?)___/g, '[b][i]$1[/i][/b]');
+            
+            // Bold
+            text = text.replace(/\*\*(.+?)\*\*/g, '[b]$1[/b]');
+            text = text.replace(/__(.+?)__/g, '[b]$1[/b]');
+            
+            // Italic
+            text = text.replace(/\*(.+?)\*/g, '[i]$1[/i]');
+            text = text.replace(/_(.+?)_/g, '[i]$1[/i]');
+            
+            // Strikethrough
+            text = text.replace(/~~(.+?)~~/g, '[s]$1[/s]');
+            
+            // Code blocks
+            text = text.replace(/```(\w*)\n([\s\S]*?)```/g, '[code]$2[/code]');
+            
+            // Inline code
+            text = text.replace(/`(.+?)`/g, '[code]$1[/code]');
+            
+            // Images
+            text = text.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '[img]$2[/img]');
+            
+            // Links
+            text = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '[url=$2]$1[/url]');
+            
+            // Blockquotes
+            text = text.replace(/^> (.+)$/gm, '[quote]$1[/quote]');
+            
+            // Unordered lists
+            text = text.replace(/^[\*\-] (.+)$/gm, '[*]$1');
+            
+            // Ordered lists (simple conversion)
+            text = text.replace(/^\d+\. (.+)$/gm, '[*]$1');
+            
+            // Horizontal rule
+            text = text.replace(/^---+$/gm, '[hr]');
+            text = text.replace(/^\*\*\*+$/gm, '[hr]');
+            
+            document.getElementById('output').innerText = text;
+        }
+
+        function bbcodeToMarkdown() {
+            let text = document.getElementById('input').value;
+            
+            // Headers (size tags)
+            text = text.replace(/\[size=6\](.+?)\[\/size\]/gi, '# $1');
+            text = text.replace(/\[size=5\](.+?)\[\/size\]/gi, '## $1');
+            text = text.replace(/\[size=4\](.+?)\[\/size\]/gi, '### $1');
+            text = text.replace(/\[size=3\](.+?)\[\/size\]/gi, '#### $1');
+            text = text.replace(/\[size=2\](.+?)\[\/size\]/gi, '##### $1');
+            text = text.replace(/\[size=1\](.+?)\[\/size\]/gi, '###### $1');
+            
+            // Bold
+            text = text.replace(/\[b\](.+?)\[\/b\]/gi, '**$1**');
+            
+            // Italic
+            text = text.replace(/\[i\](.+?)\[\/i\]/gi, '*$1*');
+            
+            // Underline (no direct Markdown equivalent, using bold)
+            text = text.replace(/\[u\](.+?)\[\/u\]/gi, '_$1_');
+            
+            // Strikethrough
+            text = text.replace(/\[s\](.+?)\[\/s\]/gi, '~~$1~~');
+            
+            // Code blocks
+            text = text.replace(/\[code\]([\s\S]*?)\[\/code\]/gi, '```\n$1\n```');
+            
+            // Images
+            text = text.replace(/\[img\](.+?)\[\/img\]/gi, '![]($1)');
+            
+            // Links with text
+            text = text.replace(/\[url=([^\]]+)\](.+?)\[\/url\]/gi, '[$2]($1)');
+            
+            // Links without text
+            text = text.replace(/\[url\](.+?)\[\/url\]/gi, '[$1]($1)');
+            
+            // Quotes
+            text = text.replace(/\[quote\]([\s\S]*?)\[\/quote\]/gi, '> $1');
+            
+            // List items
+            text = text.replace(/\[\*\](.+)$/gm, '- $1');
+            
+            // Horizontal rule
+            text = text.replace(/\[hr\]/gi, '---');
+            
+            // Color (remove, no Markdown equivalent)
+            text = text.replace(/\[color=[^\]]+\](.+?)\[\/color\]/gi, '$1');
+            
+            document.getElementById('output').innerText = text;
+        }
+    </script>
+</body>
+</html>
