@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>JWT Decoder</title>
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <h1>JWT Decoder</h1>
+  <a href="../index.html">Back home</a>
+  <br><br>
+    <form>
+        <label for="input">JWT Token:</label><br>
+        <textarea id="input" name="input" rows="6" cols="80"></textarea>
+    </form>
+
+    <br>
+    <button onclick="decode()">Decode JWT</button>
+
+    <br><br>
+    <span>Header:</span>
+    <pre id="header"></pre>
+    <span>Payload:</span>
+    <pre id="payload"></pre>
+    <span>Signature (Base64):</span>
+    <pre id="signature"></pre>
+
+    <script>
+        function base64UrlDecode(str) {
+            // Replace URL-safe characters
+            let base64 = str.replace(/-/g, '+').replace(/_/g, '/');
+            // Pad with '=' if needed
+            while (base64.length % 4) {
+                base64 += '=';
+            }
+            return decodeURIComponent(escape(atob(base64)));
+        }
+
+        function decode() {
+            const input = document.getElementById('input').value.trim();
+            const parts = input.split('.');
+            
+            if (parts.length !== 3) {
+                document.getElementById('header').innerText = 'Error: Invalid JWT format (expected 3 parts)';
+                document.getElementById('payload').innerText = '';
+                document.getElementById('signature').innerText = '';
+                return;
+            }
+
+            try {
+                const header = JSON.parse(base64UrlDecode(parts[0]));
+                document.getElementById('header').innerText = JSON.stringify(header, null, 2);
+            } catch (e) {
+                document.getElementById('header').innerText = 'Error decoding header: ' + e.message;
+            }
+
+            try {
+                const payload = JSON.parse(base64UrlDecode(parts[1]));
+                
+                // Add human-readable dates for common timestamp fields
+                const timestampFields = ['exp', 'iat', 'nbf'];
+                timestampFields.forEach(field => {
+                    if (payload[field]) {
+                        payload[field + '_readable'] = new Date(payload[field] * 1000).toISOString();
+                    }
+                });
+                
+                document.getElementById('payload').innerText = JSON.stringify(payload, null, 2);
+            } catch (e) {
+                document.getElementById('payload').innerText = 'Error decoding payload: ' + e.message;
+            }
+
+            document.getElementById('signature').innerText = parts[2];
+        }
+    </script>
+</body>
+</html>

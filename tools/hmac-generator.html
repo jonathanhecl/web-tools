@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>HMAC Generator</title>
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <h1>HMAC Generator</h1>
+  <a href="../index.html">Back home</a>
+  <br><br>
+    <form>
+        <label for="input">Message:</label><br>
+        <textarea id="input" name="input" rows="6" cols="80"></textarea>
+        <br><br>
+        <label for="secret">Secret Key:</label><br>
+        <textarea id="secret" name="secret" rows="2" cols="80"></textarea>
+    </form>
+
+    <br>
+    <button onclick="generateHMAC('SHA-1')">HMAC-SHA1</button>
+    <button onclick="generateHMAC('SHA-256')">HMAC-SHA256</button>
+    <button onclick="generateHMAC('SHA-512')">HMAC-SHA512</button>
+
+    <br><br>
+    <span>HMAC Result:</span>
+    <pre id="output"></pre>
+    <span>Base64:</span>
+    <pre id="output-base64"></pre>
+
+    <script>
+        async function generateHMAC(algorithm) {
+            const message = document.getElementById('input').value;
+            const secret = document.getElementById('secret').value;
+            
+            try {
+                const encoder = new TextEncoder();
+                const keyData = encoder.encode(secret);
+                const messageData = encoder.encode(message);
+                
+                const cryptoKey = await crypto.subtle.importKey(
+                    'raw',
+                    keyData,
+                    { name: 'HMAC', hash: algorithm },
+                    false,
+                    ['sign']
+                );
+                
+                const signature = await crypto.subtle.sign('HMAC', cryptoKey, messageData);
+                const hashArray = Array.from(new Uint8Array(signature));
+                const hexHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+                
+                // Base64
+                const base64Hash = btoa(String.fromCharCode(...hashArray));
+                
+                document.getElementById('output').innerText = hexHash;
+                document.getElementById('output-base64').innerText = base64Hash;
+            } catch (e) {
+                document.getElementById('output').innerText = 'Error: ' + e.message;
+                document.getElementById('output-base64').innerText = '';
+            }
+        }
+    </script>
+</body>
+</html>

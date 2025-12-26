@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>URL Encoder/Decoder</title>
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <h1>URL Encoder/Decoder</h1>
+  <a href="../index.html">Back home</a>
+  <br><br>
+    <form>
+        <label for="input">Input:</label><br>
+        <textarea id="input" name="input" rows="10" cols="80"></textarea>
+    </form>
+
+    <br>
+    <button onclick="encode()">Encode URL</button>
+    <button onclick="decode()">Decode URL</button>
+    <button onclick="encodeComponent()">Encode Component</button>
+    <button onclick="decodeComponent()">Decode Component</button>
+
+    <br><br>
+    <span>Output:</span>
+    <pre id="output"></pre>
+
+    <script>
+        function encode() {
+            const input = document.getElementById('input').value;
+            try {
+                document.getElementById('output').innerText = encodeURI(input);
+            } catch (e) {
+                document.getElementById('output').innerText = 'Error: ' + e.message;
+            }
+        }
+
+        function decode() {
+            const input = document.getElementById('input').value;
+            try {
+                document.getElementById('output').innerText = decodeURI(input);
+            } catch (e) {
+                document.getElementById('output').innerText = 'Error: ' + e.message;
+            }
+        }
+
+        function encodeComponent() {
+            const input = document.getElementById('input').value;
+            try {
+                document.getElementById('output').innerText = encodeURIComponent(input);
+            } catch (e) {
+                document.getElementById('output').innerText = 'Error: ' + e.message;
+            }
+        }
+
+        function decodeComponent() {
+            const input = document.getElementById('input').value;
+            try {
+                document.getElementById('output').innerText = decodeURIComponent(input);
+            } catch (e) {
+                document.getElementById('output').innerText = 'Error: ' + e.message;
+            }
+        }
+    </script>
+</body>
+</html>

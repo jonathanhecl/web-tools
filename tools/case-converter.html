@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Case Converter</title>
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <h1>Case Converter</h1>
+  <a href="../index.html">Back home</a>
+  <br><br>
+    <form>
+        <label for="input">Input Text:</label><br>
+        <textarea id="input" name="input" rows="6" cols="80"></textarea>
+    </form>
+
+    <br>
+    <button onclick="convert('upper')">UPPERCASE</button>
+    <button onclick="convert('lower')">lowercase</button>
+    <button onclick="convert('title')">Title Case</button>
+    <button onclick="convert('sentence')">Sentence case</button>
+    <button onclick="convert('camel')">camelCase</button>
+    <button onclick="convert('pascal')">PascalCase</button>
+    <button onclick="convert('snake')">snake_case</button>
+    <button onclick="convert('kebab')">kebab-case</button>
+    <button onclick="convert('constant')">CONSTANT_CASE</button>
+
+    <br><br>
+    <span>Output:</span>
+    <pre id="output"></pre>
+
+    <script>
+        function getWords(text) {
+            // Split by spaces, underscores, hyphens, and camelCase boundaries
+            return text
+                .replace(/([a-z])([A-Z])/g, '$1 $2')
+                .replace(/[_\-]+/g, ' ')
+                .trim()
+                .split(/\s+/)
+                .filter(w => w.length > 0);
+        }
+
+        function convert(type) {
+            const input = document.getElementById('input').value;
+            let result = '';
+
+            switch(type) {
+                case 'upper':
+                    result = input.toUpperCase();
+                    break;
+                    
+                case 'lower':
+                    result = input.toLowerCase();
+                    break;
+                    
+                case 'title':
+                    result = input.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+                    break;
+                    
+                case 'sentence':
+                    result = input.toLowerCase().replace(/(^\w|[.!?]\s+\w)/g, c => c.toUpperCase());
+                    break;
+                    
+                case 'camel':
+                    const camelWords = getWords(input);
+                    result = camelWords.map((w, i) => {
+                        const lower = w.toLowerCase();
+                        return i === 0 ? lower : lower.charAt(0).toUpperCase() + lower.slice(1);
+                    }).join('');
+                    break;
+                    
+                case 'pascal':
+                    const pascalWords = getWords(input);
+                    result = pascalWords.map(w => {
+                        const lower = w.toLowerCase();
+                        return lower.charAt(0).toUpperCase() + lower.slice(1);
+                    }).join('');
+                    break;
+                    
+                case 'snake':
+                    result = getWords(input).map(w => w.toLowerCase()).join('_');
+                    break;
+                    
+                case 'kebab':
+                    result = getWords(input).map(w => w.toLowerCase()).join('-');
+                    break;
+                    
+                case 'constant':
+                    result = getWords(input).map(w => w.toUpperCase()).join('_');
+                    break;
+            }
+
+            document.getElementById('output').innerText = result;
+        }
+    </script>
+</body>
+</html>
