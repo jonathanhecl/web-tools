@@ -7,7 +7,7 @@
 </head>
 <body>
   <h1>Case Converter</h1>
-  <a href="../index.html">Back home</a>
+  <a href="../index.html" class="back-link">Back home</a>
   <br><br>
     <form>
         <label for="input">Input Text:</label><br>
@@ -93,5 +93,6 @@
             document.getElementById('output').innerText = result;
         }
     </script>
+<script>if (window.self !== window.top) document.body.classList.add('in-iframe');</script>
 </body>
 </html>

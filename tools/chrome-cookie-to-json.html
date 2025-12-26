@@ -6,7 +6,7 @@
 </head>
 <body>
   <h1>Chrome Cookie To JSON</h1>
-  <a href="../index.html">Back home</a>
+  <a href="../index.html" class="back-link">Back home</a>
   <br><br>
     <form>
         <label for="cookie">Chrome Cookie:</label><br>
@@ -36,5 +36,6 @@
             document.getElementById('json-inline').innerText = JSON.stringify(cookieObject);
         }
     </script>
+<script>if (window.self !== window.top) document.body.classList.add('in-iframe');</script>
 </body>
 </html>

@@ -7,7 +7,7 @@
 </head>
 <body>
   <h1>Markdown ↔ BBCode Converter</h1>
-  <a href="../index.html">Back home</a>
+  <a href="../index.html" class="back-link">Back home</a>
   <br><br>
     <form>
         <label for="input">Input:</label><br>
@@ -126,5 +126,6 @@
             document.getElementById('output').innerText = text;
         }
     </script>
+<script>if (window.self !== window.top) document.body.classList.add('in-iframe');</script>
 </body>
 </html>

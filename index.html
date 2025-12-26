@@ -1,24 +1,45 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Web Tools</title>
   <link rel="stylesheet" href="./styles.css">
 </head>
-<body>
-  <h1>Web Tools</h1>
+<body class="app-layout">
   
-  <ul>
-    <li><a href="./tools/hex-to-dec-golang.html">HEX to Dec array for Golang</a></li>
-    <li><a href="./tools/chrome-cookie-to-json.html">Chrome Cookie To JSON</a></li>
-    <li><a href="./tools/markdown-bbcode.html">Markdown ↔ BBCode Converter</a></li>
-    <li><a href="./tools/dec-hex-string.html">DEC / HEX / STRING Converter</a></li>
-    <li><a href="./tools/base64.html">Base64 Encoder/Decoder</a></li>
-    <li><a href="./tools/url-encoder.html">URL Encoder/Decoder</a></li>
-    <li><a href="./tools/jwt-decoder.html">JWT Decoder</a></li>
-    <li><a href="./tools/hash-generator.html">Hash Generator</a></li>
-    <li><a href="./tools/hmac-generator.html">HMAC Generator</a></li>
-    <li><a href="./tools/case-converter.html">Case Converter</a></li>
-  </ul>
+  <button class="menu-toggle" onclick="toggleMenu()">☰ Menu</button>
   
+  <nav class="sidebar" id="sidebar">
+    <h2>Web Tools</h2>
+    <ul>
+      <li><a href="./tools/hex-to-dec-golang.html" target="toolframe" onclick="closeMobileMenu()">HEX to Dec (Golang)</a></li>
+      <li><a href="./tools/chrome-cookie-to-json.html" target="toolframe" onclick="closeMobileMenu()">Chrome Cookie To JSON</a></li>
+      <li><a href="./tools/markdown-bbcode.html" target="toolframe" onclick="closeMobileMenu()">Markdown ↔ BBCode</a></li>
+      <li><a href="./tools/dec-hex-string.html" target="toolframe" onclick="closeMobileMenu()">DEC / HEX / STRING</a></li>
+      <li><a href="./tools/base64.html" target="toolframe" onclick="closeMobileMenu()">Base64</a></li>
+      <li><a href="./tools/url-encoder.html" target="toolframe" onclick="closeMobileMenu()">URL Encoder/Decoder</a></li>
+      <li><a href="./tools/jwt-decoder.html" target="toolframe" onclick="closeMobileMenu()">JWT Decoder</a></li>
+      <li><a href="./tools/hash-generator.html" target="toolframe" onclick="closeMobileMenu()">Hash Generator</a></li>
+      <li><a href="./tools/hmac-generator.html" target="toolframe" onclick="closeMobileMenu()">HMAC Generator</a></li>
+      <li><a href="./tools/case-converter.html" target="toolframe" onclick="closeMobileMenu()">Case Converter</a></li>
+    </ul>
+  </nav>
+  
+  <main class="content">
+    <iframe name="toolframe" id="toolframe" src="./tools/base64.html"></iframe>
+  </main>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById('sidebar').classList.toggle('open');
+    }
+    
+    function closeMobileMenu() {
+      if (window.innerWidth <= 768) {
+        document.getElementById('sidebar').classList.remove('open');
+      }
+    }
+  </script>
 </body>
 </html>
