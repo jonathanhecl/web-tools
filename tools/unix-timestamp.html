@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Unix Timestamp Converter</title>
+  <link rel="stylesheet" href="../styles.css">
+  <style>
+    .section { margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #444; }
+    .section h2 { margin-top: 0; font-size: 1.2rem; }
+    input[type="number"], input[type="text"], input[type="datetime-local"] {
+      background-color: #1a1a1a;
+      color: #ffffff;
+      border: 1px solid #ffffff;
+      padding: 8px;
+      margin: 5px;
+    }
+    .result { color: #4CAF50; font-weight: bold; }
+    .label { display: inline-block; width: 80px; }
+  </style>
+</head>
+<body>
+  <h1>Unix Timestamp Converter</h1>
+  <a href="../index.html" class="back-link">Back home</a>
+  <br><br>
+
+  <div class="section">
+    <h2>Current Time</h2>
+    <p><span class="label">Unix:</span> <span class="result" id="currentUnix"></span></p>
+    <p><span class="label">GMT-0:</span> <span class="result" id="currentGmt0"></span></p>
+    <p><span class="label">GMT-3:</span> <span class="result" id="currentGmt3"></span></p>
+    <button onclick="updateCurrentTime()">Refresh</button>
+  </div>
+
+  <div class="section">
+    <h2>Unix Timestamp → Date</h2>
+    <input type="number" id="unixInput" placeholder="1703635200" style="width: 200px;">
+    <button onclick="unixToDate()">Convert</button>
+    <br><br>
+    <p><span class="label">GMT-0:</span> <span class="result" id="unixToGmt0"></span></p>
+    <p><span class="label">GMT-3:</span> <span class="result" id="unixToGmt3"></span></p>
+  </div>
+
+  <div class="section">
+    <h2>Date → Unix Timestamp</h2>
+    <input type="datetime-local" id="dateInput" style="width: 250px;">
+    <select id="dateTimezone" style="background-color: #1a1a1a; color: #fff; border: 1px solid #fff; padding: 8px;">
+      <option value="0">GMT-0 (UTC)</option>
+      <option value="-3" selected>GMT-3 (Argentina)</option>
+    </select>
+    <button onclick="dateToUnix()">Convert</button>
+    <br><br>
+    <p><span class="label">Unix:</span> <span class="result" id="dateToUnix"></span></p>
+  </div>
+
+  <div class="section">
+    <h2>Time Difference</h2>
+    <p>
+      <span class="label">Unix 1:</span>
+      <input type="number" id="diff1" placeholder="1703635200" style="width: 200px;">
+    </p>
+    <p>
+      <span class="label">Unix 2:</span>
+      <input type="number" id="diff2" placeholder="1703721600" style="width: 200px;">
+    </p>
+    <button onclick="calcDiff()">Calculate Difference</button>
+    <br><br>
+    <p><span class="label">Diff:</span> <span class="result" id="diffResult"></span></p>
+    <p><span class="label">Seconds:</span> <span class="result" id="diffSeconds"></span></p>
+  </div>
+
+  <script>
+    function formatDate(date, offsetHours) {
+      const d = new Date(date.getTime() + offsetHours * 3600000);
+      const year = d.getUTCFullYear();
+      const month = String(d.getUTCMonth() + 1).padStart(2, '0');
+      const day = String(d.getUTCDate()).padStart(2, '0');
+      const hours = String(d.getUTCHours()).padStart(2, '0');
+      const minutes = String(d.getUTCMinutes()).padStart(2, '0');
+      const seconds = String(d.getUTCSeconds()).padStart(2, '0');
+      return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    }
+
+    function updateCurrentTime() {
+      const now = new Date();
+      const unix = Math.floor(now.getTime() / 1000);
+      document.getElementById('currentUnix').innerText = unix;
+      document.getElementById('currentGmt0').innerText = formatDate(now, 0);
+      document.getElementById('currentGmt3').innerText = formatDate(now, -3);
+    }
+
+    function unixToDate() {
+      const unix = parseInt(document.getElementById('unixInput').value, 10);
+      if (isNaN(unix)) {
+        document.getElementById('unixToGmt0').innerText = 'Invalid timestamp';
+        document.getElementById('unixToGmt3').innerText = '';
+        return;
+      }
+      const date = new Date(unix * 1000);
+      document.getElementById('unixToGmt0').innerText = formatDate(date, 0);
+      document.getElementById('unixToGmt3').innerText = formatDate(date, -3);
+    }
+
+    function dateToUnix() {
+      const dateStr = document.getElementById('dateInput').value;
+      const tzOffset = parseInt(document.getElementById('dateTimezone').value, 10);
+      
+      if (!dateStr) {
+        document.getElementById('dateToUnix').innerText = 'Select a date';
+        return;
+      }
+      
+      // Parse the datetime-local value and adjust for timezone
+      const date = new Date(dateStr);
+      // datetime-local is parsed as local time, we need to adjust
+      const localOffset = date.getTimezoneOffset() / 60; // in hours
+      const targetOffset = tzOffset;
+      const adjustedDate = new Date(date.getTime() + (localOffset - targetOffset) * 3600000);
+      
+      const unix = Math.floor(adjustedDate.getTime() / 1000);
+      document.getElementById('dateToUnix').innerText = unix;
+    }
+
+    function calcDiff() {
+      const unix1 = parseInt(document.getElementById('diff1').value, 10);
+      const unix2 = parseInt(document.getElementById('diff2').value, 10);
+      
+      if (isNaN(unix1) || isNaN(unix2)) {
+        document.getElementById('diffResult').innerText = 'Invalid timestamps';
+        document.getElementById('diffSeconds').innerText = '';
+        return;
+      }
+      
+      const diffSec = Math.abs(unix2 - unix1);
+      document.getElementById('diffSeconds').innerText = diffSec.toLocaleString() + ' seconds';
+      
+      const days = Math.floor(diffSec / 86400);
+      const hours = Math.floor((diffSec % 86400) / 3600);
+      const minutes = Math.floor((diffSec % 3600) / 60);
+      const seconds = diffSec % 60;
+      
+      let result = '';
+      if (days > 0) result += days + ' days ';
+      if (hours > 0 || days > 0) result += hours + ' hours ';
+      if (minutes > 0 || hours > 0 || days > 0) result += minutes + ' min ';
+      result += seconds + ' sec';
+      
+      document.getElementById('diffResult').innerText = result;
+    }
+
+    // Initialize
+    updateCurrentTime();
+  </script>
+<script>if (window.self !== window.top) document.body.classList.add('in-iframe');</script>
+</body>
+</html>
